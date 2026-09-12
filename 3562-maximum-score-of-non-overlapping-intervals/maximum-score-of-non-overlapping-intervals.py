@@ -11,13 +11,10 @@ class Solution:
             l, r, w = intervals[i]
             arr.append((r, l, w, i))
 
-        # Sort according to right endpoint
         arr.sort()
 
         ends = [x[0] for x in arr]
 
-        # dp[i][k] = best answer using first i intervals
-        # with at most k intervals
         dp = [[(0, []) for _ in range(5)] for _ in range(n + 1)]
 
         for i in range(1, n + 1):
@@ -26,10 +23,8 @@ class Solution:
 
             for k in range(1, 5):
 
-                # Don't take current interval
                 dp[i][k] = dp[i - 1][k]
 
-                # Find number of intervals whose end < current start
                 p = bisect.bisect_left(ends, l)
 
                 prev_weight, prev_indices = dp[p][k - 1]
@@ -37,15 +32,12 @@ class Solution:
                 take_weight = prev_weight + w
                 take_indices = sorted(prev_indices + [idx])
 
-                # Take current interval
                 if take_weight > dp[i][k][0]:
                     dp[i][k] = (take_weight, take_indices)
 
                 elif take_weight == dp[i][k][0]:
                     if take_indices < dp[i][k][1]:
                         dp[i][k] = (take_weight, take_indices)
-
-        # Find maximum score among 0,1,2,3,4 intervals
         ans_weight = 0
         ans = []
 
